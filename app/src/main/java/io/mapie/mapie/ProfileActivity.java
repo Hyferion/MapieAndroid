@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +26,8 @@ public class ProfileActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+    private TextView email_user;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,10 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         };
+
+        email = user.getEmail();
+        email_user = (TextView) findViewById(R.id.email_users);
+        email_user.setText(email);
 
         btnChangeEmail = (Button) findViewById(R.id.change_email_button);
         btnChangePassword = (Button) findViewById(R.id.change_password_button);
