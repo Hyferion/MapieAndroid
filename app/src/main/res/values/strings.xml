@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Mapie</string>
     <string name="title_activity_maps">Map</string>
+    <string name="profile">Profile</string>
     <string name="title_activity_login">Sign in</string>
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>
