@@ -5,21 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="io.mapie.mapie.MapsActivity">
+    tools:context="io.mapie.mapie.MapsActivity"
+    android:background="@color/colorPrimary">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme"
         app:elevation="0dp">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimaryDark"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -81,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorSecondary"
             android:text="@string/btn_change"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
@@ -92,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorSecondary"
             android:text="@string/btn_change"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
@@ -103,10 +96,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorSecondary"
             android:text="@string/btn_send"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -120,10 +114,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorSecondary"
             android:text="@string/btn_remove"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
         <Button
             android:id="@+id/change_email_button"
@@ -132,7 +127,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/change_email"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@color/colorSecondary"/>
 
         <Button
             android:id="@+id/change_password_button"
@@ -141,7 +137,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/change_password"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@color/colorSecondary"/>
 
         <Button
             android:id="@+id/sending_pass_reset_button"
@@ -150,7 +147,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/send_password_reset_email"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@color/colorSecondary"/>
 
         <Button
             android:id="@+id/remove_user_button"
@@ -159,7 +157,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/remove_user"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@color/colorSecondary"/>
 
         <Button
             android:id="@+id/sign_out"
@@ -167,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/redDark"
             android:text="@string/btn_sign_out"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
