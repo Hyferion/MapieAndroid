@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="start_profile" type="id">start_profile</item>
+    <item name="start_camera" type="id" />
 </resources>

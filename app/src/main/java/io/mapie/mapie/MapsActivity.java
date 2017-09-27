@@ -54,6 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     String value;
     private Button btn_profile;
+    private Button btn_camera;
 
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -72,11 +73,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         btn_profile = (Button) findViewById(R.id.start_profile);
+        btn_camera = (Button) findViewById(R.id.start_camera);
+
 
         btn_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MapsActivity.this, ProfileActivity.class));
+            }
+        });
+
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MapsActivity.this, CameraActivity.class));
             }
         });
 
