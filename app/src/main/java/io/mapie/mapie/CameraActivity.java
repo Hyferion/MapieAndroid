@@ -2,6 +2,8 @@ package io.mapie.mapie;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+
+
 import android.hardware.Camera;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
