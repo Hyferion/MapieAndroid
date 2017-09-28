@@ -32,6 +32,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +54,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Location mLastLocation;
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
+    String userID;
     String value;
+    private FirebaseAuth auth;
     private Button btn_profile;
     private Button btn_camera;
 
@@ -181,10 +185,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 
+        //get firebase auth instance
+        auth = FirebaseAuth.getInstance();
+
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
+
 
         GeoFire geofire = new GeoFire(mDatabase);
         //TODO Replace "User" with UserID
-        geofire.setLocation("2",new GeoLocation(location.getLatitude(),location.getLongitude()));
+        geofire.setLocation(userID,new GeoLocation(location.getLatitude(),location.getLongitude()));
         getDevices();
 
 
@@ -265,7 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // You can add here other case statements according to your requirement.
         }
     }
-
+    //TODO get all devices by userid. Maybe collect all userids and set a marker for every userid
     private void getDevices(){
         for (int i = 0; i<10;i++){
             String counter = Integer.toString(i);
