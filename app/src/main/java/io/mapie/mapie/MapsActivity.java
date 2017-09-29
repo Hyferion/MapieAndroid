@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.LocationCallback;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -40,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseAuth auth;
     private Button btn_profile;
     private Button btn_camera;
+    String[] name = new String[20];
+
+
 
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -194,9 +199,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         GeoFire geofire = new GeoFire(mDatabase);
-        //TODO Replace "User" with UserID
+
         geofire.setLocation(userID,new GeoLocation(location.getLatitude(),location.getLongitude()));
-        getDevices();
+        getDevicess();
+
+
+        /*COULD BE USED FOR A BETTER LOCATION GATHERING
+        geofire.getLocation("MPibXZ5hBaPqQhazQODxBAhVYrG3", new LocationCallback() {
+            @Override
+            public void onLocationResult(String key, GeoLocation location) {
+                if (location != null) {
+                    System.out.println(String.format("The location for key %s is [%f,%f]", key, location.latitude, location.longitude));
+                } else {
+                    System.out.println(String.format("There is no location for key %s in GeoFire", key));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.err.println("There was an error getting the GeoFire location: " + databaseError);
+            }
+        });*/
 
 
         //stop location updates
@@ -277,11 +300,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
     //TODO get all devices by userid. Maybe collect all userids and set a marker for every userid
-    private void getDevices(){
-        for (int i = 0; i<10;i++){
-            String counter = Integer.toString(i);
-            final String finalcounter = Integer.toString(i);
-        mDatabase.child(counter).child("l").addValueEventListener(new ValueEventListener() {
+    private void getDevices(final String name){
+            System.out.println(name);
+        mDatabase.child(name).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -295,7 +316,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         locationLong = Double.parseDouble(map.get(1).toString());
                     }
                     LatLng deviceLatlng = new LatLng(locationLat, locationLong);
-                    mMap.addMarker(new MarkerOptions().position(deviceLatlng).title("Device: " + finalcounter ));
+                    mMap.addMarker(new MarkerOptions().position(deviceLatlng).title("Device: " + name ));
 
                 }
             }
@@ -306,5 +327,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });}
+
+
+    private void getDevicess(){
+
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    int i = 0;
+                    for(DataSnapshot d : dataSnapshot.getChildren()) {
+                        name[i] = d.getKey();
+                        System.out.println(name[i]);
+                        getDevices(name[i]);
+                        i++;
+                    }
+                }
+            }//onDataChange
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }//onCancelled
+        });
     }
+
+
+
 }
