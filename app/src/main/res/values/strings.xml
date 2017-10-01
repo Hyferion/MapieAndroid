@@ -31,4 +31,8 @@
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="camera">Camera</string>
+    <string name="takePicture">Take Picture</string>
+    <string name="takeVideo">Take Video</string>
+    <string name="Picture"> Picture </string>
+    <string name="Video"> Video </string>
 </resources>
