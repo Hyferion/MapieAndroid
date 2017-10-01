@@ -2,4 +2,5 @@
 <resources>
     <item name="start_profile" type="id">start_profile</item>
     <item name="start_camera" type="id" />
+    <item name="takeVideo" type="id" />
 </resources>
