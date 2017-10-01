@@ -5,6 +5,17 @@
     android:orientation="vertical" >
 
     <Button
+        android:id="@+id/start_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal|center_vertical"
+        android:padding="5dp"
+        android:text="@string/camera" />
+
+    <Button
         android:id="@id/start_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,15 +33,6 @@
         android:layout_weight="1"
         android:scrollbars="vertical"
         class="com.google.android.gms.maps.SupportMapFragment"/>
-    <Button
-        android:id="@id/start_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="@string/camera"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:padding="5dp"
-        android:background="@color/colorPrimary" />
+
 
 </RelativeLayout>
