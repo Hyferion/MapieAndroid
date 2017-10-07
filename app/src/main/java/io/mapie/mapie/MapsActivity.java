@@ -110,6 +110,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         btn_profile = (Button) findViewById(R.id.start_profile);
+<<<<<<< HEAD
+=======
+        btn_camera = (Button) findViewById(R.id.start_camera);
+>>>>>>> ef030f3da254c81082da30ab373fd4477c7e3395
         btnCapturePicture = (Button) findViewById(R.id.takePicture);
         btnRecordVideo = (Button) findViewById(R.id.takeVideo);
 
@@ -122,6 +126,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+<<<<<<< HEAD
+=======
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            startActivity(new Intent(MapsActivity.this, CameraActivity.class));
+            }
+        });
+>>>>>>> ef030f3da254c81082da30ab373fd4477c7e3395
 
 
 
