@@ -35,7 +35,7 @@ public class CameraActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
 
     // directory name to store captured images and videos
-    private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
+    private static final String IMAGE_DIRECTORY_NAME = "mapie";
 
     private Uri fileUri; // file url to store image/video
 
