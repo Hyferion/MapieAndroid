@@ -37,3 +37,8 @@ captures/
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 app/libs/
 app/src/main/res/drawable/
+=======
+.DS_Store
+/captures
+.externalNativeBuild
+>>>>>>> development
