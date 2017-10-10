@@ -95,10 +95,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     StorageReference imagesRef = storageRef.child("images");
     StorageReference videosRef = storageRef.child("videos");
     StorageReference imageTestRef = storageRef.child("images/test.jpg");
-    UploadTask uploadTask = imageTestRef.putFile(getOutputMediaFileUri(MEDIA_TYPE_IMAGE));
+    //UploadTask uploadTask = imageTestRef.putFile(getOutputMediaFileUri(MEDIA_TYPE_IMAGE));
 
 
 
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabase = database.getReference();
@@ -254,16 +256,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //get firebase auth instance
         auth = FirebaseAuth.getInstance();
-
-        //get current user
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
 
 
         GeoFire geofire = new GeoFire(mDatabase);
 
         geofire.setLocation(userID,new GeoLocation(location.getLatitude(),location.getLongitude()));
-        getDevicess();
+        getDevices();
 
 
         /*COULD BE USED FOR A BETTER LOCATION GATHERING
@@ -361,9 +360,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // You can add here other case statements according to your requirement.
         }
     }
-    //TODO get all devices by userid. Maybe collect all userids and set a marker for every userid
-    private void getDevices(final String name){
-            System.out.println(name);
+
+    private void setMarkers(final String name){
         mDatabase.child(name).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -377,9 +375,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (map.get(1) != null) {
                         locationLong = Double.parseDouble(map.get(1).toString());
                     }
-                    LatLng deviceLatlng = new LatLng(locationLat, locationLong);
-                    mMap.addMarker(new MarkerOptions().position(deviceLatlng).title("Device: " + name ));
+                    userID = user.getUid();
 
+                    if (name != userID) {
+                        LatLng deviceLatlng = new LatLng(locationLat, locationLong);
+                        mMap.addMarker(new MarkerOptions().position(deviceLatlng).title("Device: " + name));
+                    }
                 }
             }
 
@@ -391,7 +392,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });}
 
 
-    private void getDevicess(){
+    private void getDevices(){
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -400,22 +401,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     int i = 0;
                     for(DataSnapshot d : dataSnapshot.getChildren()) {
                         name[i] = d.getKey();
-                        System.out.println(name[i]);
-                        getDevices(name[i]);
+                        setMarkers(name[i]);
                         i++;
                     }
                 }
-            }//onDataChange
+            }
 
             @Override
             public void onCancelled(DatabaseError error) {
 
-            }//onCancelled
+            }
         });
     }
 
 
 
+
+    /**
+     * CAMERA FUNCTIONS
+     *
+     *
+     */
 
 
 
