@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 public class CameraActivity extends Activity {
 
     // Activity request codes
@@ -31,12 +35,19 @@ public class CameraActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
 
     // directory name to store captured images and videos
-    private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
+    private static final String IMAGE_DIRECTORY_NAME = "mapie";
 
     private Uri fileUri; // file url to store image/video
 
     private VideoView videoPreview;
     private Button btnCapturePicture, btnRecordVideo;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+    StorageReference imagesRef = storageRef.child("images");
+    StorageReference videosRef = storageRef.child("videos");
+    StorageReference imageTestRef = storageRef.child("images/test.jpg");
+    UploadTask uploadTask = imageTestRef.putFile(getOutputMediaFileUri(MEDIA_TYPE_IMAGE));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
