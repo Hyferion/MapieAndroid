@@ -35,18 +35,26 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-
+        <!-- [START firebase_service] -->
         <service
             android:name=".MapieFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
+        <!-- [END firebase_service] -->
+        <!-- [START firebase_iid_service] -->
         <service
             android:name=".MapieFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_iid_service] -->
+        <service android:name=".MapieJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>
         </service>
 
@@ -76,6 +84,7 @@
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CameraActivity" />
+        <activity android:name=".NotificationActivity"></activity>
     </application>
 
 </manifest>
