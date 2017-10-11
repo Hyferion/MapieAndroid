@@ -524,7 +524,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // video successfully recorded
                 // preview the recorded video
                 videosRef = storageRef.child("videos/" + fileUri.getLastPathSegment());
-                uploadTask = imagesRef.putFile(fileUri);
+                uploadTask = videosRef.putFile(fileUri);
 
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled recording
