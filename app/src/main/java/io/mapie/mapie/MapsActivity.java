@@ -3,6 +3,7 @@ package io.mapie.mapie;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,7 +11,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileObserver;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -38,6 +41,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +55,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -92,11 +98,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
-    StorageReference imagesRef = storageRef.child("images");
-    StorageReference videosRef = storageRef.child("videos");
-    StorageReference imageTestRef = storageRef.child("images/test.jpg");
-    UploadTask uploadTask = imageTestRef.putFile(getOutputMediaFileUri(MEDIA_TYPE_IMAGE));
+    StorageReference imagesRef;
+    StorageReference videosRef;
+    UploadTask uploadTask;
 
+
+    //StorageReference imageTestRef = storageRef.child("images/camPic.jpg");
+    // UploadTask uploadTask = imageTestRef.putFile(getOutputMediaFileUri(MEDIA_TYPE_IMAGE));
+   /* String path = "/storage/emulated/0/Pictures/mapie";
+    File file = new  File(path, "IMG_20171008_182620.jpg");
+    Uri fileU = Uri.fromFile(file);
+    UploadTask uploadTask = imageTestRef.putFile(fileU);*/
 
 
 
@@ -114,15 +126,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnRecordVideo = (Button) findViewById(R.id.takeVideo);
 
 
-
         btn_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MapsActivity.this, ProfileActivity.class));
             }
         });
-
-
 
 
 
@@ -133,7 +142,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
 
 
@@ -169,6 +177,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // will close the app if the device does't have camera
             finish();
         }
+
+
 
 
     }
@@ -416,10 +426,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-
-
-
-
     /**
      * Checking device has camera hardware or not
      * */
@@ -459,6 +465,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // save file url in bundle as it will be null on scren orientation
         // changes
         outState.putParcelable("file_uri", fileUri);
+
     }
 
     @Override
@@ -497,6 +504,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 // successfully captured the image
                 // display it in image view
+                imagesRef = storageRef.child("images/" + fileUri.getLastPathSegment());
+                uploadTask = imagesRef.putFile(fileUri);
 
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled Image capture
