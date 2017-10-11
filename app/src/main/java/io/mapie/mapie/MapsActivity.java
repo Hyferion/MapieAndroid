@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference mDatabase = database.getReference("users");
+    DatabaseReference mDatabase = database.getReference();
 
 
     @Override
