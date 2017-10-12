@@ -3,7 +3,6 @@ package io.mapie.mapie;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,9 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileObserver;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -26,7 +23,6 @@ import android.widget.VideoView;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.LocationCallback;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -36,13 +32,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,13 +48,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -99,8 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
 
-    StorageReference imagesRef;
-    StorageReference videosRef;
+    StorageReference userFilesRef;
     UploadTask uploadTask;
 
 
@@ -128,6 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btn_profile = (Button) findViewById(R.id.start_profile);
         btnCapturePicture = (Button) findViewById(R.id.takePicture);
         btnRecordVideo = (Button) findViewById(R.id.takeVideo);
+
 
 
         btn_profile.setOnClickListener(new View.OnClickListener() {
@@ -501,12 +491,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
+        auth = FirebaseAuth.getInstance();
+        userFilesRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/" + fileUri.getLastPathSegment());
+
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // successfully captured the image
                 // display it in image view
-                imagesRef = storageRef.child("images/" + fileUri.getLastPathSegment());
-                uploadTask = imagesRef.putFile(fileUri);
+                uploadTask = userFilesRef.putFile(fileUri);
 
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled Image capture
@@ -523,8 +515,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 // video successfully recorded
                 // preview the recorded video
-                videosRef = storageRef.child("videos/" + fileUri.getLastPathSegment());
-                uploadTask = videosRef.putFile(fileUri);
+                uploadTask = userFilesRef.putFile(fileUri);
 
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled recording
