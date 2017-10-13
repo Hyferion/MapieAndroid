@@ -46,7 +46,7 @@ public class ViewActivity extends AppCompatActivity {
 
 
         imgPreview = (ImageView) findViewById(R.id.imageView);
-        //videoPreview = (VideoView) findViewById(R.id.videoPreview);
+        videoPreview = (VideoView) findViewById(R.id.videoView);
 
         try {
             localPicture = File.createTempFile("file", "jpg");
@@ -56,10 +56,10 @@ public class ViewActivity extends AppCompatActivity {
         }
 
 
-        userPicRef.getFile(localPicture).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+        userVidRef.getFile(localVideo).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                previewCapturedImage(localPicture);
+                previewVideo(localVideo);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -84,7 +84,7 @@ public class ViewActivity extends AppCompatActivity {
     public static void previewCapturedImage(File file) {
         try {
             // hide video preview
-           // videoPreview.setVisibility(View.GONE);
+            videoPreview.setVisibility(View.GONE);
 
             imgPreview.setVisibility(View.VISIBLE);
 
@@ -108,13 +108,13 @@ public class ViewActivity extends AppCompatActivity {
     /**
      * Previewing recorded video
      */
-    public void previewVideo(Uri fileUri) {
+    public void previewVideo(File file) {
         try {
             // hide image preview
             imgPreview.setVisibility(View.GONE);
 
             videoPreview.setVisibility(View.VISIBLE);
-            videoPreview.setVideoPath(fileUri.getPath());
+            videoPreview.setVideoPath(file.getPath());
             // start playing
             videoPreview.start();
         } catch (Exception e) {
