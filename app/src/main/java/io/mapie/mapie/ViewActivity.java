@@ -48,6 +48,8 @@ public class ViewActivity extends AppCompatActivity {
         imgPreview = (ImageView) findViewById(R.id.imageView);
         videoPreview = (VideoView) findViewById(R.id.videoView);
 
+
+
         try {
             localPicture = File.createTempFile("file", "jpg");
             localVideo = File.createTempFile("file", "mp4");
@@ -55,16 +57,50 @@ public class ViewActivity extends AppCompatActivity {
 
         }
 
-
-        userVidRef.getFile(localVideo).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            userPicRef.getFile(localPicture).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                previewVideo(localVideo);
+                previewCapturedImage(localPicture);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+                userVidRef.getFile(localVideo).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        previewVideo(localVideo);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+            }
+        });
+
+        // Delete the file
+        userPicRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                userVidRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // File deleted successfully
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Uh-oh, an error occurred!
+
+                    }
+                });
             }
         });
 

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -504,7 +507,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // successfully captured the image
                 // display it in image view
                 uploadTask = userPicRef.putFile(fileUri);
-                startActivity(new Intent(MapsActivity.this, ViewActivity.class));
+
+                // Register observers to listen for when the download is done or if it fails
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        startActivity(new Intent(MapsActivity.this, ViewActivity.class));
+                    }
+                });
+
 
 
             } else if (resultCode == RESULT_CANCELED) {
@@ -523,8 +541,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // video successfully recorded
                 // preview the recorded video
                 uploadTask = userVideoRef.putFile(fileUri);
-                startActivity(new Intent(MapsActivity.this, ViewActivity.class));
 
+                // Register observers to listen for when the download is done or if it fails
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        startActivity(new Intent(MapsActivity.this, ViewActivity.class));
+                    }
+                });
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled recording
                 Toast.makeText(getApplicationContext(),
