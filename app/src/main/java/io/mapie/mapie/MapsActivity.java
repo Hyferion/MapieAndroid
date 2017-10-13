@@ -91,6 +91,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     StorageReference storageRef = storage.getReference();
 
     StorageReference userFilesRef;
+    StorageReference userPicRef;
+    StorageReference userVideoRef;
     UploadTask uploadTask;
 
 
@@ -494,12 +496,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // if the result is capturing Image
         auth = FirebaseAuth.getInstance();
         userFilesRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/" + fileUri.getLastPathSegment());
+        userPicRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.jpg");
+        userVideoRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.mp4");
 
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // successfully captured the image
                 // display it in image view
-                uploadTask = userFilesRef.putFile(fileUri);
+                uploadTask = userPicRef.putFile(fileUri);
                 startActivity(new Intent(MapsActivity.this, ViewActivity.class));
 
 
@@ -518,7 +522,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 // video successfully recorded
                 // preview the recorded video
-                uploadTask = userFilesRef.putFile(fileUri);
+                uploadTask = userVideoRef.putFile(fileUri);
                 startActivity(new Intent(MapsActivity.this, ViewActivity.class));
 
             } else if (resultCode == RESULT_CANCELED) {

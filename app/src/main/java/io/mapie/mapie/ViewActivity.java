@@ -3,17 +3,40 @@ package io.mapie.mapie;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
+
 public class ViewActivity extends AppCompatActivity {
 
 
     private static ImageView imgPreview;
     private static VideoView videoPreview;
+
+    private Uri fileUri;
+
+
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    StorageReference userPicRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.jpg" );
+    StorageReference userVidRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.mp4" );
+    File localPicture;
+    File localVideo;
 
 
     @Override
@@ -22,8 +45,28 @@ public class ViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view);
 
 
-        imgPreview = (ImageView) findViewById(R.id.imgPreview);
-        videoPreview = (VideoView) findViewById(R.id.videoPreview);
+        imgPreview = (ImageView) findViewById(R.id.imageView);
+        //videoPreview = (VideoView) findViewById(R.id.videoPreview);
+
+        try {
+            localPicture = File.createTempFile("file", "jpg");
+            localVideo = File.createTempFile("file", "mp4");
+        } catch( IOException e ) {
+
+        }
+
+
+        userPicRef.getFile(localPicture).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                previewCapturedImage(localPicture);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
 
 
         /*
@@ -38,10 +81,10 @@ public class ViewActivity extends AppCompatActivity {
     /**
      * Display image from a path to ImageView
      */
-    public static void previewCapturedImage(Uri fileUri) {
+    public static void previewCapturedImage(File file) {
         try {
             // hide video preview
-            videoPreview.setVisibility(View.GONE);
+           // videoPreview.setVisibility(View.GONE);
 
             imgPreview.setVisibility(View.VISIBLE);
 
@@ -53,7 +96,7 @@ public class ViewActivity extends AppCompatActivity {
             options.inSampleSize = 8;
 
 
-            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
+            final Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(),
                     options);
 
             imgPreview.setImageBitmap(bitmap);

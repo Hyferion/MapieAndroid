@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="horizontal"
-    android:baselineAligned="false">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="io.mapie.mapie.ViewActivity">
 
 
-    <!-- To display picture taken -->
     <ImageView
-        android:id="@+id/imgPreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <!-- To preview video recorded -->
-    <VideoView
-        android:id="@+id/videoPreview"
-        android:layout_width="wrap_content"
-        android:layout_height="400dp"
-        android:visibility="gone" />
-
-
-    </LinearLayout>
+        android:id="@+id/imageView"
+        android:layout_width="433dp"
+        android:layout_height="532dp"
+        app:srcCompat="@android:drawable/star_big_on"
+        tools:layout_editor_absoluteX="-21dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+</android.support.constraint.ConstraintLayout>
