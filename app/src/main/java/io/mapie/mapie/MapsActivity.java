@@ -3,6 +3,7 @@ package io.mapie.mapie;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -499,6 +500,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // successfully captured the image
                 // display it in image view
                 uploadTask = userFilesRef.putFile(fileUri);
+                startActivity(new Intent(MapsActivity.this, ViewActivity.class));
+
 
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled Image capture
@@ -516,6 +519,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // video successfully recorded
                 // preview the recorded video
                 uploadTask = userFilesRef.putFile(fileUri);
+                startActivity(new Intent(MapsActivity.this, ViewActivity.class));
 
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled recording

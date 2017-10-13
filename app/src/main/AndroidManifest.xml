@@ -62,6 +62,7 @@
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".CameraActivity" />
+        <activity android:name=".ViewActivity"></activity>
     </application>
 
 </manifest>
