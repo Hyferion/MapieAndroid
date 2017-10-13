@@ -60,7 +60,8 @@ import java.util.Locale;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,
+        GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "TAG";
     private GoogleMap mMap;
@@ -69,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     String userID;
+    String TargetUsrId;
     String value;
     private FirebaseAuth auth;
     private Button btn_profile;
@@ -213,6 +215,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+        mMap.setOnMarkerClickListener(this);
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -387,7 +390,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     if (name != userID) {
                         LatLng deviceLatlng = new LatLng(locationLat, locationLong);
-                        mMap.addMarker(new MarkerOptions().position(deviceLatlng).title("Device: " + name));
+                        mMap.addMarker(new MarkerOptions().position(deviceLatlng).title(name)).setTag(name);
+
+
                     }
                 }
             }
@@ -435,6 +440,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // no camera on this device
             return false;
         }
+    }
+
+    /** Called when the user clicks a marker. */
+    @Override
+    public boolean onMarkerClick(final Marker marker){
+        TargetUsrId = (String)marker.getTag();
+
+        //TODO Optionen angeben ob Video oder Bild gewünscht ist
+        captureImage();
+        //recordVideo();
+
+        return false;
     }
 
     /*
@@ -498,9 +515,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
         auth = FirebaseAuth.getInstance();
-        userFilesRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/" + fileUri.getLastPathSegment());
-        userPicRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.jpg");
-        userVideoRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.mp4");
+        userFilesRef = storageRef.child("userFiles/" + TargetUsrId + "/" + fileUri.getLastPathSegment());
+        userPicRef = storageRef.child("userFiles/" + TargetUsrId + "/file.jpg");
+        userVideoRef = storageRef.child("userFiles/" + TargetUsrId + "/file.mp4");
 
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
