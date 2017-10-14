@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.VideoView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,6 +57,7 @@ public class ViewActivity extends AppCompatActivity {
         } catch( IOException e ) {
 
         }
+        imgPreview.setRotation(90);
 
             userPicRef.getFile(localPicture).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
             @Override
@@ -80,7 +82,7 @@ public class ViewActivity extends AppCompatActivity {
         });
 
         // Delete the file
-        userPicRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+        /*userPicRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 // File deleted successfully
@@ -103,7 +105,7 @@ public class ViewActivity extends AppCompatActivity {
                 });
             }
         });
-
+*/
 
         /*
         TODO -Get the file from firebase and save it on the device
@@ -124,12 +126,13 @@ public class ViewActivity extends AppCompatActivity {
 
             imgPreview.setVisibility(View.VISIBLE);
 
+
             // bimatp factory
             BitmapFactory.Options options = new BitmapFactory.Options();
 
             // downsizing image as it throws OutOfMemory Exception for larger
             // images
-            options.inSampleSize = 8;
+           // options.inSampleSize = 8;
 
 
             final Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(),
@@ -148,6 +151,7 @@ public class ViewActivity extends AppCompatActivity {
         try {
             // hide image preview
             imgPreview.setVisibility(View.GONE);
+
 
             videoPreview.setVisibility(View.VISIBLE);
             videoPreview.setVideoPath(file.getPath());

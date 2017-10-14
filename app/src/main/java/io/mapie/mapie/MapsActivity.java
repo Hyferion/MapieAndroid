@@ -1,7 +1,5 @@
 package io.mapie.mapie;
 
-
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -516,8 +514,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // if the result is capturing Image
         auth = FirebaseAuth.getInstance();
         userFilesRef = storageRef.child("userFiles/" + TargetUsrId + "/" + fileUri.getLastPathSegment());
-        userPicRef = storageRef.child("userFiles/" + TargetUsrId + "/file.jpg");
-        userVideoRef = storageRef.child("userFiles/" + TargetUsrId + "/file.mp4");
+        userPicRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.jpg");
+        userVideoRef = storageRef.child("userFiles/" + auth.getCurrentUser().getUid() + "/file.mp4");
 
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
