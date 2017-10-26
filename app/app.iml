@@ -169,6 +169,7 @@
     <orderEntry type="library" exported="" scope="TEST" name="espresso-core-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-11.0.4" level="project" />
     <orderEntry type="library" exported="" name="play-services-tagmanager-11.0.4" level="project" />
+    <orderEntry type="library" exported="" name="firebase-jobdispatcher-0.6.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.5" level="project" />
     <orderEntry type="library" exported="" name="constraint-layout-solver-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="transition-26.0.0-alpha1" level="project" />
