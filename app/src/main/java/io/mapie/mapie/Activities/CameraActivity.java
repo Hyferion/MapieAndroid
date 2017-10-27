@@ -1,4 +1,4 @@
-package io.mapie.mapie;
+package io.mapie.mapie.Activities;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,10 +7,7 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -18,13 +15,15 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import io.mapie.mapie.BuildConfig;
+import io.mapie.mapie.R;
 
 public class CameraActivity extends Activity {
 
