@@ -2,6 +2,7 @@ package io.mapie.mapie;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -120,9 +122,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        btn_profile = (Button) findViewById(R.id.start_profile);
-        btnCapturePicture = (Button) findViewById(R.id.takePicture);
-        btnRecordVideo = (Button) findViewById(R.id.takeVideo);
+        btn_profile = findViewById(R.id.start_profile);
+        btnCapturePicture = findViewById(R.id.takePicture);
+        btnRecordVideo = findViewById(R.id.takeVideo);
+
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Incoming Request");
+        builder1.setMessage("User XY wants to see what's around, do you want to take a picture?");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                captureImage();
+                                                  }
+             });
+        builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                   }
+               });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
 
 
 
@@ -430,14 +452,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Checking device has camera hardware or not
      * */
     private boolean isDeviceSupportCamera() {
-        if (getApplicationContext().getPackageManager().hasSystemFeature(
-                PackageManager.FEATURE_CAMERA)) {
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
+        // this device has a camera
+// no camera on this device
+        return getApplicationContext().getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA);
     }
 
     /** Called when the user clicks a marker. */
