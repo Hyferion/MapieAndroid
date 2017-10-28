@@ -2,9 +2,15 @@ package io.mapie.mapie;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -17,6 +23,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +63,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -146,6 +154,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         AlertDialog alert11 = builder1.create();
         alert11.show();
 
+
+
+/**
+ * HERE WE HAVE TO CHECK IF THE APP IS OPEN, IF NOT JUST DO THE DIALOG NOT THE NOTIFICATION
+ */
+        if(true/*APP IS NOT OPEN*/) {
+            // The id of the channel.
+            String CHANNEL_ID = "my_channel_01";
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
+                            .setContentTitle("Mapie")
+                            .setContentText("Someone wants to see whats around you!");
+            // Creates an explicit intent for an Activity in your app
+            Intent resultIntent = new Intent(this, MapsActivity.class);
+
+            // The stack builder object will contain an artificial back stack for the
+            // started Activity.
+            // This ensures that navigating backward from the Activity leads out of
+            // your app to the Home screen.
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            // Adds the back stack for the Intent (but not the Intent itself)
+            stackBuilder.addParentStack(MapsActivity.class);
+            // Adds the Intent that starts the Activity to the top of the stack
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // mNotificationId is a unique integer your app uses to identify the
+            // notification. For example, to cancel the notification, you can pass its ID
+            // number to NotificationManager.cancel().
+            mNotificationManager.notify(1, mBuilder.build());
+        }
 
 
         btn_profile.setOnClickListener(new View.OnClickListener() {
