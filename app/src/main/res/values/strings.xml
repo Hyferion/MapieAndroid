@@ -53,5 +53,5 @@
         It should describe the category of notifications that will be sent through this channel
      -->
     <string name="default_notification_channel_name" translatable="true">News</string>
-
+    <string name="settings"> Settings</string>
 </resources>

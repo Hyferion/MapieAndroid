@@ -28,6 +28,7 @@ import android.support.v7.graphics.Target;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -73,7 +74,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationListener,
         GoogleMap.OnMarkerClickListener {
 
-    private static final String TAG = "TAG";
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -81,11 +81,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     String userID;
     String TargetUsrId;
-    String value;
     private FirebaseAuth auth;
-    private Button btn_profile;
-    private Button btn_camera;
-    private Button btn_video;
+    private ImageButton btn_profile;
     String[] name = new String[20];
 
     // Activity request codes
@@ -100,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Uri fileUri; // file url to store image/video
 
     private VideoView videoPreview;
-    private Button btnCapturePicture, btnRecordVideo;
+    private Button btnCapturePicture;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
@@ -133,8 +130,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         btn_profile = findViewById(R.id.start_profile);
-        btnCapturePicture = findViewById(R.id.takePicture);
-        btnRecordVideo = findViewById(R.id.takeVideo);
+        btnCapturePicture = findViewById(R.id.btnCapturePicture);
+
 
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -200,7 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btn_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MapsActivity.this, NotificationActivity.class));
+                startActivity(new Intent(MapsActivity.this, ProfileActivity.class));
             }
         });
 
@@ -228,17 +225,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-		/*
-		 * Record video button click event
-		 */
-        btnRecordVideo.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // record video
-                recordVideo();
-            }
-        });
 
         // Checking camera availability
         if (!isDeviceSupportCamera()) {
