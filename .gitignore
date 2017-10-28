@@ -41,3 +41,4 @@ app/src/main/res/drawable/
 .DS_Store
 /captures
 .externalNativeBuild
+node_modules/

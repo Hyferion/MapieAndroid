@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.graphics.Target;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +59,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.Console;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -458,8 +460,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (name != userID) {
                         LatLng deviceLatlng = new LatLng(locationLat, locationLong);
                         mMap.addMarker(new MarkerOptions().position(deviceLatlng).title(name)).setTag(name);
-
-
                     }
                 }
             }
@@ -494,6 +494,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    /** Called when the user clicks a marker. */
+    @Override
+    public boolean onMarkerClick(final Marker marker){
+        TargetUsrId = (String)marker.getTag();
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setTitle("Request Picture");
+        builder1.setMessage("Do you want to request a picture from this location?");
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                //upload the target userid to the database
+
+                mDatabase.child("requests").child(userID).setValue(TargetUsrId);
+            }
+        });
+        builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+
+        return false;
+    }
+
 
     /**
      * Checking device has camera hardware or not
@@ -503,18 +531,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 // no camera on this device
         return getApplicationContext().getPackageManager().hasSystemFeature(
                 PackageManager.FEATURE_CAMERA);
-    }
-
-    /** Called when the user clicks a marker. */
-    @Override
-    public boolean onMarkerClick(final Marker marker){
-        TargetUsrId = (String)marker.getTag();
-
-        //TODO Optionen angeben ob Video oder Bild gewünscht ist
-        captureImage();
-        //recordVideo();
-
-        return false;
     }
 
     /*
