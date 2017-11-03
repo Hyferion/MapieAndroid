@@ -82,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String userID;
     String TargetUsrId;
     private FirebaseAuth auth;
-    private ImageButton btn_profile;
+    private Button btn_profile;
     String[] name = new String[20];
 
     // Activity request codes
@@ -129,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        btn_profile = findViewById(R.id.start_profile);
+        btn_profile = findViewById(R.id.start_setting);
         btnCapturePicture = findViewById(R.id.btnCapturePicture);
 
 
