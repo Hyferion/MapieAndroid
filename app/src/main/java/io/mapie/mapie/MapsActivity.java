@@ -42,6 +42,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -111,7 +112,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     UploadTask uploadTask;
 
 
-
     //StorageReference imageTestRef = storageRef.child("images/camPic.jpg");
     // UploadTask uploadTask = imageTestRef.putFile(getOutputMediaFileUri(MEDIA_TYPE_IMAGE));
    /* String path = "/storage/emulated/0/Pictures/mapie";
@@ -120,8 +120,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     UploadTask uploadTask = imageTestRef.putFile(fileU);*/
 
 
-        //get current user
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    //get current user
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mDatabase = database.getReference();
@@ -145,23 +145,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 captureImage();
-                                                  }
-             });
+            }
+        });
         builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
-                   }
-               });
+            }
+        });
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
 
 
-
 /**
  * HERE WE HAVE TO CHECK IF THE APP IS OPEN, IF NOT JUST DO THE DIALOG NOT THE NOTIFICATION
  */
-        if(true/*APP IS NOT OPEN*/) {
+        if (true/*APP IS NOT OPEN*/) {
             // The id of the channel.
             String CHANNEL_ID = "my_channel_01";
             NotificationCompat.Builder mBuilder =
@@ -205,7 +204,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -217,7 +215,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 		/*
-		 * Capture image button click event
+         * Capture image button click event
 		 */
         btnCapturePicture.setOnClickListener(new View.OnClickListener() {
 
@@ -229,7 +227,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 		/*
-		 * Record video button click event
+         * Record video button click event
 		 */
         btnRecordVideo.setOnClickListener(new View.OnClickListener() {
 
@@ -250,8 +248,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
+    }
 
+    private void putMarker(LatLng point) {
 
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        markerOptions.title("Test");
+
+        markerOptions.alpha(0.8f);
+
+        markerOptions.position(point);
+        mMap.addMarker(markerOptions);
     }
 
 
@@ -268,7 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-       mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
                 this, R.raw.style_json));
 
         //Initialize Google Play Services
@@ -279,8 +287,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
@@ -321,7 +328,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
 
 
-
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
@@ -341,7 +347,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         GeoFire geofire = new GeoFire(mDatabase);
 
-        geofire.setLocation(userID,new GeoLocation(location.getLatitude(),location.getLongitude()));
+        geofire.setLocation(userID, new GeoLocation(location.getLatitude(), location.getLongitude()));
         getDevices();
 
 
@@ -376,7 +382,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    public boolean checkLocationPermission(){
+
+    public boolean checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -441,7 +448,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void setMarkers(final String name){
+    private void setMarkers(final String name) {
         mDatabase.child(name).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -469,17 +476,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });}
+        });
+    }
 
-
-    private void getDevices(){
+    private void getDevices() {
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     int i = 0;
-                    for(DataSnapshot d : dataSnapshot.getChildren()) {
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
                         name[i] = d.getKey();
                         setMarkers(name[i]);
                         i++;
@@ -494,10 +501,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    /** Called when the user clicks a marker. */
+    /**
+     * Called when the user clicks a marker.
+     */
     @Override
-    public boolean onMarkerClick(final Marker marker){
-        TargetUsrId = (String)marker.getTag();
+    public boolean onMarkerClick(final Marker marker) {
+        TargetUsrId = (String) marker.getTag();
 
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         builder1.setTitle("Request Picture");
@@ -525,7 +534,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Checking device has camera hardware or not
-     * */
+     */
     private boolean isDeviceSupportCamera() {
         // this device has a camera
 // no camera on this device
@@ -589,20 +598,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Receiving activity result method will be called after closing the camera
-     * */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
         auth = FirebaseAuth.getInstance();
         userFilesRef = storageRef.child("userFiles/" + TargetUsrId + "/" + fileUri.getLastPathSegment());
         userPicRef = storageRef.child("userFiles/" + mLastLocation.getLatitude() + ":" + mLastLocation.getLongitude() + ".jpg");
-        userVideoRef = storageRef.child("userFiles/" +  mLastLocation.getLatitude() + ":" + mLastLocation.getLongitude() + ".mp4");
+        userVideoRef = storageRef.child("userFiles/" + mLastLocation.getLatitude() + ":" + mLastLocation.getLongitude() + ".mp4");
 
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // successfully captured the image
                 // display it in image view
                 uploadTask = userPicRef.putFile(fileUri);
+                putMarker(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
                 // Register observers to listen for when the download is done or if it fails
                 uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -618,7 +628,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         startActivity(new Intent(MapsActivity.this, ViewActivity.class));
                     }
                 });
-
 
 
             } else if (resultCode == RESULT_CANCELED) {
@@ -667,10 +676,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     /**
      * ------------ Helper Methods ----------------------
-     * */
+     */
 
 	/*
 	 * Creating file uri to store image/video
