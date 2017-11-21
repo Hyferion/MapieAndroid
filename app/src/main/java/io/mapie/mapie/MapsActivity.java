@@ -530,10 +530,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     double locationLat = 0;
                     double locationLong = 0;
                     if (parts[0] != null) {
-                        locationLat = Double.parseDouble(parts[0].toString());
+                        locationLat = Double.parseDouble(parts[0]);
                     }
                     if (parts[1] != null) {
-                        locationLong = Double.parseDouble(parts[1].toString());
+                        locationLong = Double.parseDouble(parts[1]);
                     }
                         LatLng picLatlng = new LatLng(locationLat, locationLong);
                         mMap.addMarker(new MarkerOptions().position(picLatlng).icon(BitmapDescriptorFactory.defaultMarker(50)));
