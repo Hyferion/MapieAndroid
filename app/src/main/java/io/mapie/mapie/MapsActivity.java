@@ -42,6 +42,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -345,10 +346,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userID = user.getUid();
 
 
-        GeoFire geofire = new GeoFire(mDatabase);
+        GeoFire geofire = new GeoFire(mDatabase.child("users"));
 
         geofire.setLocation(userID, new GeoLocation(location.getLatitude(), location.getLongitude()));
         getDevices();
+        getPictures();
 
 
         /*COULD BE USED FOR A BETTER LOCATION GATHERING
@@ -449,7 +451,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setMarkers(final String name) {
-        mDatabase.child(name).child("l").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("users").child(name).child("l").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -481,7 +483,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getDevices() {
 
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -500,6 +502,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
+
+    private void getPictures(){
+        mDatabase.child("piclocations").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    int i = 0;
+                    for(DataSnapshot d : dataSnapshot.getChildren()){
+                        name[i] = (String) d.getValue();
+                        setPicMarker(name[i]);
+                        i++;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setPicMarker(final String name) {
+                    String[] parts = name.split(":");
+                    double locationLat = 0;
+                    double locationLong = 0;
+                    if (parts[0] != null) {
+                        locationLat = Double.parseDouble(parts[0].toString());
+                    }
+                    if (parts[1] != null) {
+                        locationLong = Double.parseDouble(parts[1].toString());
+                    }
+                        LatLng picLatlng = new LatLng(locationLat, locationLong);
+                        mMap.addMarker(new MarkerOptions().position(picLatlng).icon(BitmapDescriptorFactory.defaultMarker(50)));
+                    }
 
     /**
      * Called when the user clicks a marker.
@@ -612,7 +650,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // successfully captured the image
                 // display it in image view
                 uploadTask = userPicRef.putFile(fileUri);
-                putMarker(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+                mDatabase.child("piclocations").child(userID +","+ (int)(Math.random()*10000)).setValue(mLastLocation.getLatitude() + ":" + mLastLocation.getLongitude());
 
                 // Register observers to listen for when the download is done or if it fails
                 uploadTask.addOnFailureListener(new OnFailureListener() {
