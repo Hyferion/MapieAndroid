@@ -112,6 +112,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     StorageReference userVideoRef;
     UploadTask uploadTask;
 
+    private static Context mapsContext;
+
 
     //StorageReference imageTestRef = storageRef.child("images/camPic.jpg");
     // UploadTask uploadTask = imageTestRef.putFile(getOutputMediaFileUri(MEDIA_TYPE_IMAGE));
@@ -132,6 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        mapsContext = getBaseContext();
 
         btn_profile = findViewById(R.id.start_profile);
         btnCapturePicture = findViewById(R.id.takePicture);
@@ -222,8 +226,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(MapsActivity.this, CameraActivity.class));
                 // capture picture
-                captureImage();
+               // captureImage();
             }
         });
 
@@ -251,16 +256,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void putMarker(LatLng point) {
-
-        MarkerOptions markerOptions = new MarkerOptions();
-
-        markerOptions.title("Test");
-
-        markerOptions.alpha(0.8f);
-
-        markerOptions.position(point);
-        mMap.addMarker(markerOptions);
+    public static Context getContext() {
+        return mapsContext;
     }
 
 
@@ -504,13 +501,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private void getPictures(){
+    private void getPictures() {
         mDatabase.child("piclocations").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     int i = 0;
-                    for(DataSnapshot d : dataSnapshot.getChildren()){
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
                         name[i] = (String) d.getValue();
                         setPicMarker(name[i]);
                         i++;
@@ -526,18 +523,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setPicMarker(final String name) {
-                    String[] parts = name.split(":");
-                    double locationLat = 0;
-                    double locationLong = 0;
-                    if (parts[0] != null) {
-                        locationLat = Double.parseDouble(parts[0]);
-                    }
-                    if (parts[1] != null) {
-                        locationLong = Double.parseDouble(parts[1]);
-                    }
-                        LatLng picLatlng = new LatLng(locationLat, locationLong);
-                        mMap.addMarker(new MarkerOptions().position(picLatlng).icon(BitmapDescriptorFactory.defaultMarker(50)));
-                    }
+        String[] parts = name.split(":");
+        double locationLat = 0;
+        double locationLong = 0;
+        if (parts[0] != null) {
+            locationLat = Double.parseDouble(parts[0]);
+        }
+        if (parts[1] != null) {
+            locationLong = Double.parseDouble(parts[1]);
+        }
+        LatLng picLatlng = new LatLng(locationLat, locationLong);
+        mMap.addMarker(new MarkerOptions().position(picLatlng).icon(BitmapDescriptorFactory.defaultMarker(50)));
+    }
 
     /**
      * Called when the user clicks a marker.
@@ -650,7 +647,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // successfully captured the image
                 // display it in image view
                 uploadTask = userPicRef.putFile(fileUri);
-                mDatabase.child("piclocations").child(userID +","+ (int)(Math.random()*10000)).setValue(mLastLocation.getLatitude() + ":" + mLastLocation.getLongitude());
+                mDatabase.child("piclocations").child(userID + "," + (int) (Math.random() * 10000)).setValue(mLastLocation.getLatitude() + ":" + mLastLocation.getLongitude());
 
                 // Register observers to listen for when the download is done or if it fails
                 uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -719,7 +716,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
 
 	/*
-	 * Creating file uri to store image/video
+     * Creating file uri to store image/video
 	 */
     public Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
