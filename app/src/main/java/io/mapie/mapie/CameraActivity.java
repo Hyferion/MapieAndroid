@@ -120,7 +120,7 @@ public class CameraActivity extends Activity {
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
 
-    public void recordVideo() {
+   /* public void recordVideo() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
         fileUri = FileProvider.getUriForFile(CameraActivity.this, BuildConfig.APPLICATION_ID + ".provider", getOutputMediaFile(MEDIA_TYPE_VIDEO));
@@ -133,7 +133,7 @@ public class CameraActivity extends Activity {
 
         // start the video capture Intent
         startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
-    }
+    }*/
 
     /*
     * Here we store the file url as it will be null after returning from camera
@@ -197,37 +197,6 @@ public class CameraActivity extends Activity {
                 // failed to capture image
                 Toast.makeText(getApplicationContext(),
                         "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        } else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // video successfully recorded
-                // preview the recorded video
-                uploadTask = userVideoRef.putFile(fileUri);
-
-                // Register observers to listen for when the download is done or if it fails
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        startActivity(new Intent(CameraActivity.this, MapsActivity.class));
-                    }
-                });
-            } else if (resultCode == RESULT_CANCELED) {
-                // user cancelled recording
-                Toast.makeText(getApplicationContext(),
-                        "User cancelled video recording", Toast.LENGTH_SHORT)
-                        .show();
-            } else {
-                // failed to record video
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! Failed to record video", Toast.LENGTH_SHORT)
                         .show();
             }
         }
